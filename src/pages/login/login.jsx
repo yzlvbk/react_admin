@@ -1,16 +1,48 @@
 import React, { Component } from 'react'
 import './login.less'
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { reqLogin} from '../../api/api.js'
+import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
+import { Redirect } from 'react-router';
 
 export default class Login extends Component {
 
-    onFinish = values => {
+    // 点击登录按钮
+    onFinish = async values => {
+        const { username, password } = values
+            //请求成功
+            const data  = await reqLogin(username, password)
+            console.log(data);
+            if(data.status === 0) {
+                // 登录成功
+                message.success('登录成功')
 
-        console.log('发送ajax请求', values);
+                // 保存user
+                const user = data.data
+                memoryUtils.user = user // 保存在内存中
+                storageUtils.saveUser(user)
+
+
+                // 跳转到管理页面(不需要在回退到登陆页) replace
+                this.props.history.replace('/')
+            }else {
+                // 登录失败
+                message.error(data.msg)
+            }
+            console.log(this.props)
+
+        
       };
 
     render() {
+        // 如果用户已经登陆，自动跳转到管理页面
+        const user = memoryUtils.user
+        if(user._id) {
+            return <Redirect to="/" />
+        }
+
         return (
             <div className="login">
                 <header className="login-header">
@@ -38,7 +70,7 @@ export default class Login extends Component {
                             name="password"
                             rules={[
                                 { required: true, whitespace: true, message: '请输入密码' },
-                                { min: 6, message: '密码至少6位' },
+                                { min: 4, message: '密码至少4位' },
                                 { max: 16, message: '密码最多16位' },
                                 { pattern: /^[a-zA-Z0-9_]+$/, message: '密码由有数字、字母、下划线组成' }
                               ]}

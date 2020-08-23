@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './left-nav.less'
 import logo from '../../assets/image/logo.png'
 import { Link, withRouter } from 'react-router-dom'
-import { Menu, Button } from 'antd';
+import { Menu } from 'antd';
 import menuList from '../../config/menuConfig'
 
 const { SubMenu } = Menu;
@@ -44,7 +44,7 @@ class LeftNav extends Component {
     在第一次render()之前执行一次
     为第一个render()准备数据(同步的)
     */
-    componentWillMount() {
+   UNSAFE_componentWillMount() {
         this.menuNodes = this.getMenuNodes(menuList)
     }
 

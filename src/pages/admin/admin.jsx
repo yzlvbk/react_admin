@@ -12,6 +12,7 @@ import User from '../user/user'
 import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
+import Order from '../order/order'
 
 const {  Footer, Sider, Content } = Layout;
 
@@ -31,7 +32,7 @@ export default class Admin extends Component {
                 </Sider>
                 <Layout>
                     <Header></Header>
-                    <Content style={{backgroundColor:"#fff"}}>
+                    <Content style={{margin: 20 ,backgroundColor:"#fff"}}>
                         <Switch>
                             <Route path='/home' component={Home}></Route>
                             <Route path='/category' component={Category}></Route>
@@ -41,6 +42,7 @@ export default class Admin extends Component {
                             <Route path='/charts/bar' component={Bar}></Route>
                             <Route path='/charts/line' component={Line}></Route>
                             <Route path='/charts/pie' component={Pie}></Route>
+                            <Route path='/order' component={Order}></Route>
                             <Redirect to="/home" />
                         </Switch>
 

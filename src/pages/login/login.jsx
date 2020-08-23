@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './login.less'
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { reqLogin} from '../../api/api.js'
 import memoryUtils from '../../utils/memoryUtils'

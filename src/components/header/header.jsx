@@ -70,7 +70,6 @@ class Header extends Component {
     */
     componentWillUnmount() {
         // 清除定时器
-        console.log(this, 'unmounted')
         clearInterval(this.invervalId)
     }
 

@@ -33,10 +33,7 @@ class UpdateForm extends Component {
                     name="categoryName"
                     initialValue={categoryName}
                     rules={[
-                        {
-                            required: true,
-                            message: '请输入分类名称'
-                        }
+                        { required: true, message: '请输入分类名称' }
                     ]}>
                     <Input placeholder="请输入分类名称"></Input>
                 </Form.Item>

@@ -14,7 +14,6 @@ export default class Login extends Component {
         const { username, password } = values
             //请求成功
             const data  = await reqLogin(username, password)
-            console.log(data);
             if(data.status === 0) {
                 // 登录成功
                 message.success('登录成功')

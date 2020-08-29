@@ -54,16 +54,18 @@ export default class Category extends Component {
 
     }
 
-    /* 获取一级/二级数据 */
-    async getCategory () {
+    /* 
+    获取一级/二级数据 
+    parentId: 如果没有指定滚局状态中parentId请求, 如果指定了根据指定的请求
+    */
+    async getCategory (parentId) {
         this.setState({ loading: true })
-        const data = await reqCategory(this.state.parentId)
+        const parentid = parentId || this.state.parentId
+        const data = await reqCategory(parentid)
         this.setState({ loading: false })
         if(data.status !== 0) return message.error('获取分类失败') 
 
-        console.log(data)
-
-        if(this.state.parentId === '0') { // 一级列表
+        if (parentid === '0') { // 一级列表
             this.setState({ categorys: data.data }, () => {
             })
         }else { // 二级列表
@@ -105,16 +107,25 @@ export default class Category extends Component {
 
     /* 添加分类 */
     addCategory = async () => {
-        // 1.隐藏模态框
-        this.setState({ showStatus: 0 })
+        // 进行表单验证 如果添加值存在
+        if (this.form.current.getFieldValue('categoryName')) {
+            // 1.隐藏模态框
+            this.setState({ showStatus: 0 })
 
-        // 2.发送添加请求
-        const { category, categoryName } = this.form.current.getFieldValue()
-        const data = await reqAddCategory(categoryName, category)
-        if(data.status === 0) {
-            // 3.重新获取分类列表
-            this.getCategory()
-        }
+            // 2.发送添加请求
+            const { category, categoryName } = this.form.current.getFieldValue()
+            const data = await reqAddCategory(categoryName, category)
+            if (data.status === 0) {
+
+                // 添加的分类就是当前分类列表的分类
+                if (category === this.state.parentId) {
+                    // 3.重新获取分类列表
+                    this.getCategory()
+                } else if (category === '0') { // 在二级分类列表下添加一级分类，重新获取一级列表，但不需要显示
+                    this.getCategory('0')
+                }
+            }
+        }     
     }
 
     /* 显示更新模态框 */
@@ -128,20 +139,25 @@ export default class Category extends Component {
 
     /* 更新分类 */
     updateCategory = async () => {
+        // 进行表单验证 如果修改值存在
+        if(this.form.current.getFieldValue('categoryName')) {
+            // 1.隐藏模态框
+            this.setState({ showStatus: 0 })
 
-        // 1.隐藏模态框
-        this.setState({ showStatus: 0 })
-
-        // 2.发请求更新分类
-        const categoryId = this.category._id
-        const categoryName = this.form.current.getFieldValue('categoryName')
-        console.log(this.form.current.getFieldValue('categoryName'))
-        const data = await reqUpdateCategory(categoryId, categoryName)
-        if(data.status === 0) {
-            // 3.重新显示列表
-            this.getCategory()
+            // 2.发请求更新分类
+            const categoryId = this.category._id
+            const categoryName = this.form.current.getFieldValue('categoryName')
+            console.log(this.form.current.getFieldValue('categoryName'))
+            const data = await reqUpdateCategory(categoryId, categoryName)
+            if (data.status === 0) {
+                // 3.重新显示列表
+                this.getCategory()
+            }
         }
-
+        // antd 中获取到的value是旧值 ---可能是bug
+        // this.form.current.validateFields().then(async values => {
+            
+        // })
         
     }
 

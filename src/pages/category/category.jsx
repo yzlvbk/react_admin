@@ -60,7 +60,9 @@ export default class Category extends Component {
         const data = await reqCategory(this.state.parentId)
         this.setState({ loading: false })
         if(data.status !== 0) return message.error('获取分类失败') 
-    
+
+        console.log(data)
+
         if(this.state.parentId === '0') { // 一级列表
             this.setState({ categorys: data.data }, () => {
             })
@@ -87,7 +89,6 @@ export default class Category extends Component {
         }, () => { // 在状态更新且重新render()后执行
             /* 获取二级分类 */
             this.getCategory()
-            console.log(this.state.parentId)
         }) 
     }
 
@@ -99,6 +100,7 @@ export default class Category extends Component {
     /* 显示添加模态框 */
     showAdd = () => {
         this.setState({ showStatus: 1 })
+        console.log(this.state.parentId)
     }
 
     /* 添加分类 */
@@ -158,39 +160,12 @@ export default class Category extends Component {
         /* card 的标题 */
         const title = this.state.parentId === '0' ? '一级分类列表' : (
             <span>
-                <a href="#!" onClick={this.showCategorys}>一级分类列表</a>
+            <a href="#!" onClick={this.showCategorys}>一级分类列表</a>
                 <i>&gt;</i>
                 <span>{this.state.parentName}</span>
             </span>
         )
         const add = <Button onClick={this.showAdd} type="primary" icon={<PlusOutlined />}>添加</Button>
-
-        const categorys = [
-            { 
-                name: '电视',
-                _id: 1,
-                parentId: 0,
-                __v: 0
-            },
-            {
-                name: '衣服',
-                _id: 2,
-                parentId: 0,
-                __v: 0
-            },
-            {
-                name: '家具',
-                _id: 3,
-                parentId: 0,
-                __v: 0
-            },
-            {
-                name: '手机',
-                _id: 4,
-                parentId: 0,
-                __v: 0
-            }
-        ]
 
         
         // 读取指定的分类
@@ -204,7 +179,7 @@ export default class Category extends Component {
                 bordered
                 rowKey='_id'
                 loading={this.state.loading}
-                dataSource={this.state.categorys} 
+                dataSource={this.state.parentId === '0' ? this.state.categorys : this.state.subCategorys} 
                 columns={this.columns} />
                 
                 <Modal
